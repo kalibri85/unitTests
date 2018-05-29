@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Service\HappyNumberGenerator;
 
 class UserMailer
 {
@@ -10,16 +11,18 @@ class UserMailer
      * @var Mailer
      */
     private $mailer;
+    private $happyNumberGenerator;
 
-    public function __construct(Mailer $mailer)
+    public function __construct(Mailer $mailer, HappyNumberGenerator $happyNumberGenerator)
     {
         $this->mailer = $mailer;
+        $this->happyNumberGenerator = $happyNumberGenerator;
     }
 
     public function sendHello(User $user)
     {
         $body = sprintf('Hello %s.', $user->getName());
-
+        $body = $body. 'Your Happy number: '. $this->happyNumberGenerator->generate();
         $this->mailer->send($user->getEmail(), $body);
     }
 }
